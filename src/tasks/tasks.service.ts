@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid'
 import * as _ from 'lodash'
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -37,7 +37,14 @@ export class TasksService {
   }
 
   getTaskById(id: string) : Task {
-    return this.tasks.find(task => task.id = id)
+    // try to get task
+    // if not found, throw an error 404 not found
+    // otherwise, retunr the found task
+    const found = this.tasks.find(task => task.id = id)
+    if(!found) {
+      throw new NotFoundException(`Task with Id ${id} not found`)
+    }
+    return found
   }
 
   createTask(createTaskDto: CreateTaskDto): Task {
@@ -73,9 +80,7 @@ export class TasksService {
   }
 
   deleteTask(id: string) : void {
-    const index = this.tasks.findIndex(task => task.id === id)
-    if (index !== -1) {
-      this.tasks.splice(index, 1)
-    }
+    this.getTaskById(id)
+    this.tasks = this.tasks.filter(task => task.id !== id)
   }
 }
