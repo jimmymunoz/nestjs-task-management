@@ -7,7 +7,11 @@ import { AuthModule } from '../auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([TasksRepository]), AuthModule],
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forFeature([TasksRepository]),
+    AuthModule,
+  ],
   controllers: [TasksController],
   providers: [TasksService],
 })

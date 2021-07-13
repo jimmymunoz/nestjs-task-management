@@ -8,18 +8,18 @@ import { configValidationSchema } from './config.schema';
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
-      validationSchema: configValidationSchema
+      validationSchema: configValidationSchema,
     }),
     TasksModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const isProduction = configService.get('STAGE') === 'prod'
+        const isProduction = configService.get('STAGE') === 'prod';
         return {
           type: 'postgres',
           extra: {
-            ssl: isProduction ? { rejectUnauthorized: false } : null
+            ssl: isProduction ? { rejectUnauthorized: false } : null,
           },
           host: configService.get('DB_HOST'),
           port: configService.get('DB_PORT'),
@@ -28,8 +28,8 @@ import { configValidationSchema } from './config.schema';
           database: configService.get('DB_DATABASE'),
           autoLoadEntities: true,
           synchronize: true,
-        }
-      }
+        };
+      },
     }),
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
